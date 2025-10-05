@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
+	"github/com/CargoMan0/GoPay/accountmanager/internal/jwt"
 	"github/com/CargoMan0/GoPay/accountmanager/internal/repository"
 )
 
@@ -21,7 +22,7 @@ type PasswordHasher interface {
 }
 
 type TokenManager interface {
-	GenerateToken() (string, error)
+	GenerateToken(tokenType jwt.TokenType, userID uuid.UUID) (string, error)
 	ValidateToken(token string) (bool, error)
 }
 
@@ -44,8 +45,15 @@ func NewAccountService(
 }
 
 func (s *AccountService) NewAccount(ctx context.Context, data *entity.NewAccountData) (uuid.UUID, error) {
+	userID := uuid.New()
+
+	accessToken, err := s.tokenManager.GenerateToken(jwt.Access, userID)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
 	account := &entity.Account{
-		ID:       uuid.New(),
+		ID:       userID,
 		Username: data.Username,
 		Email:    data.Email,
 	}

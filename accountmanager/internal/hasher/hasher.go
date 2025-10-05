@@ -10,11 +10,12 @@ type PasswordHasher struct {
 }
 
 func NewPasswordHasher() *PasswordHasher {
+
 	return &PasswordHasher{}
 }
 
 func (p *PasswordHasher) HashPassword(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", fmt.Errorf("failed to hash password: %w", err)
 	}

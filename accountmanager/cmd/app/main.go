@@ -63,10 +63,14 @@ func run() (err error) {
 
 	// Utils
 	passwordHasher := hasher.NewPasswordHasher()
-	tokenManager := jwt.NewTokenManager()
+	tokenManager := jwt.NewTokenManager(cfg.TokenManager)
 
 	// Service
-	accountService := service.NewAccountService(repo, passwordHasher)
+	accountService := service.NewAccountService(
+		repo,
+		passwordHasher,
+		tokenManager,
+	)
 
 	// Server
 	srv := server.NewGRPC(cfg.GRPCServer, accountService)
