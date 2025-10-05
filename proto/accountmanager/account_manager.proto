@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package accountmanager;
+
+option go_package = "pkg/accountmanager";
+
+service AccountManager {
+  rpc NewAccount(NewAccountRequest) returns (NewAccountResponse);
+  rpc LoginAccount(LoginAccountRequest) returns(LoginAccountResponse);
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (google.protobuf.Empty);
+}
+
+message NewAccountRequest {
+  string Username = 1;
+  string Email = 2;
+  string Password = 3;
+}
+
+message NewAccountResponse {
+  string AccountAddress = 1;
+  google.protobuf.Timestamp RegistrationDate = 2;
+}
+
+message LoginAccountRequest {
+  string Email = 1;
+  string Password = 2;
+}
+
+message LoginAccountResponse {
+  string AccessToken = 1;
+  string RefreshToken = 2;
+}
+
+message GetAccountResponse {
+  string Username = 1;
+  string Email = 2;
+}
+
+message GetAccountRequest {
+  string ID = 1;
+}
+
+message ChangePasswordRequest {
+  string OldPassword = 1;
+  string NewPassword = 2;
+}
