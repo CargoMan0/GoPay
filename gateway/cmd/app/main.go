@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/CargoMan0/GoPay/gateway/internal/config"
+	"github/com/CargoMan0/GoPay/gateway/internal/config"
 	"log"
 	"log/slog"
 	"os/signal"
