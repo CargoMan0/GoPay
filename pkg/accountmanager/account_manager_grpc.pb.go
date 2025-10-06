@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	AccountManager_NewAccount_FullMethodName     = "/accountmanager.AccountManager/NewAccount"
+	AccountManager_LoginAccount_FullMethodName   = "/accountmanager.AccountManager/LoginAccount"
 	AccountManager_GetAccount_FullMethodName     = "/accountmanager.AccountManager/GetAccount"
 	AccountManager_ChangePassword_FullMethodName = "/accountmanager.AccountManager/ChangePassword"
 )
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountManagerClient interface {
 	NewAccount(ctx context.Context, in *NewAccountRequest, opts ...grpc.CallOption) (*NewAccountResponse, error)
+	LoginAccount(ctx context.Context, in *LoginAccountRequest, opts ...grpc.CallOption) (*LoginAccountResponse, error)
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -46,6 +48,16 @@ func (c *accountManagerClient) NewAccount(ctx context.Context, in *NewAccountReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NewAccountResponse)
 	err := c.cc.Invoke(ctx, AccountManager_NewAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountManagerClient) LoginAccount(ctx context.Context, in *LoginAccountRequest, opts ...grpc.CallOption) (*LoginAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginAccountResponse)
+	err := c.cc.Invoke(ctx, AccountManager_LoginAccount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +89,7 @@ func (c *accountManagerClient) ChangePassword(ctx context.Context, in *ChangePas
 // for forward compatibility.
 type AccountManagerServer interface {
 	NewAccount(context.Context, *NewAccountRequest) (*NewAccountResponse, error)
+	LoginAccount(context.Context, *LoginAccountRequest) (*LoginAccountResponse, error)
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAccountManagerServer()
@@ -91,6 +104,9 @@ type UnimplementedAccountManagerServer struct{}
 
 func (UnimplementedAccountManagerServer) NewAccount(context.Context, *NewAccountRequest) (*NewAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NewAccount not implemented")
+}
+func (UnimplementedAccountManagerServer) LoginAccount(context.Context, *LoginAccountRequest) (*LoginAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginAccount not implemented")
 }
 func (UnimplementedAccountManagerServer) GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
@@ -133,6 +149,24 @@ func _AccountManager_NewAccount_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AccountManagerServer).NewAccount(ctx, req.(*NewAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountManager_LoginAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountManagerServer).LoginAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountManager_LoginAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountManagerServer).LoginAccount(ctx, req.(*LoginAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -183,6 +217,10 @@ var AccountManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NewAccount",
 			Handler:    _AccountManager_NewAccount_Handler,
+		},
+		{
+			MethodName: "LoginAccount",
+			Handler:    _AccountManager_LoginAccount_Handler,
 		},
 		{
 			MethodName: "GetAccount",

@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
@@ -10,9 +12,11 @@ import (
 )
 
 type Repository interface {
-	SaveAccount(ctx context.Context, account *entity.Account) error
-	UpdateAccountPassword(ctx context.Context, id uuid.UUID, hash string) error
 	GetAccountByID(ctx context.Context, id uuid.UUID) (*entity.Account, error)
+	GetAccountByEmail(ctx context.Context, email string) (*entity.Account, error)
+
+	SaveAccountAndEventInTx(ctx context.Context, account *entity.Account) error
+	UpdateAccountPassword(ctx context.Context, id uuid.UUID, hash string) error
 }
 
 type PasswordHasher interface {
@@ -20,8 +24,13 @@ type PasswordHasher interface {
 	CompareHashAndPassword(hash, password string) (bool, error)
 }
 
+const (
+	TokenTypeAccess  = "ACCESS"
+	TokenTypeRefresh = "REFRESH"
+)
+
 type TokenManager interface {
-	GenerateToken() (string, error)
+	GenerateToken(tokenType string, userID uuid.UUID) (string, error)
 	ValidateToken(token string) (bool, error)
 }
 
@@ -43,28 +52,47 @@ func NewAccountService(
 	}
 }
 
-func (s *AccountService) NewAccount(ctx context.Context, data *entity.NewAccountData) (uuid.UUID, error) {
-	account := &entity.Account{
-		ID:       uuid.New(),
-		Username: data.Username,
-		Email:    data.Email,
+func (s *AccountService) NewAccount(ctx context.Context, data *entity.NewAccountData) (*entity.NewAccountResult, error) {
+	userID := uuid.New()
+
+	refreshToken, err := s.tokenManager.GenerateToken(TokenTypeRefresh, userID)
+	if err != nil {
+		return nil, fmt.Errorf("generate refresh token: %w", err)
 	}
 
 	hashed, err := s.hasher.HashPassword(data.Password)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("failed to hash password: %w", err)
+		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
-	account.PasswordHash = hashed
 
-	err = s.repo.SaveAccount(ctx, account)
+	account := &entity.Account{
+		ID:               userID,
+		Username:         data.Username,
+		Email:            data.Email,
+		RefreshTokenHash: hashToken(refreshToken),
+		PasswordHash:     hashed,
+	}
+
+	err = s.repo.SaveAccountAndEventInTx(ctx, account)
 	if err != nil {
-		return uuid.Nil, err
+		return nil, err
 	}
 
-	// TODO: Save account`s balance also
-	// TODO: Transactional Outbox pattern
+	accessToken, err := s.tokenManager.GenerateToken(TokenTypeAccess, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate access token: %w", err)
+	}
 
-	return account.ID, nil
+	return &entity.NewAccountResult{
+		ID:           account.ID,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+func hashToken(token string) string {
+	hash := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(hash[:])
 }
 
 func (s *AccountService) GetAccount(ctx context.Context, id uuid.UUID) (*entity.Account, error) {
@@ -106,4 +134,37 @@ func (s *AccountService) ChangePassword(ctx context.Context, data *entity.Change
 	}
 
 	return nil
+}
+
+func (s *AccountService) LoginAccount(ctx context.Context, email, password string) (*entity.LoginAccountResult, error) {
+	account, err := s.repo.GetAccountByEmail(ctx, email)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, ErrAccountNotFound
+		}
+		return nil, fmt.Errorf("repository: get account by email: %w", err)
+	}
+
+	matches, err := s.hasher.CompareHashAndPassword(account.PasswordHash, password)
+	if err != nil {
+		return nil, fmt.Errorf("hasher: compare hash and password: %w", err)
+	}
+	if !matches {
+		return nil, ErrWrongPassword
+	}
+
+	accessToken, err := s.tokenManager.GenerateToken(TokenTypeAccess, account.ID)
+	if err != nil {
+		return nil, fmt.Errorf("generate access token: %w", err)
+	}
+
+	refreshToken, err := s.tokenManager.GenerateToken(TokenTypeRefresh, account.ID)
+	if err != nil {
+		return nil, fmt.Errorf("generate refresh token: %w", err)
+	}
+
+	return &entity.LoginAccountResult{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }

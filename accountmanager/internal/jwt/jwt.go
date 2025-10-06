@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
+	"github/com/CargoMan0/GoPay/accountmanager/internal/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -20,14 +21,20 @@ type TokenManager struct {
 	secret []byte
 }
 
-func NewTokenManager(secret string) *TokenManager {
+func NewTokenManager(cfg config.TokenManager) *TokenManager {
 	return &TokenManager{
-		secret: []byte(secret),
+		secret: []byte(cfg.Secret),
 	}
 }
 
-func (t *TokenManager) GenerateToken(tokenType TokenType, userID uuid.UUID) (string, error) {
+func (t *TokenManager) GenerateToken(tokenTypeStr string, userID uuid.UUID) (string, error) {
+	tokenType, err := tokenTypeFromString(tokenTypeStr)
+	if err != nil {
+		return "", err
+	}
+
 	var expiration time.Duration
+
 	switch tokenType {
 	case Access:
 		expiration = time.Minute * 15
@@ -48,7 +55,7 @@ func (t *TokenManager) GenerateToken(tokenType TokenType, userID uuid.UUID) (str
 	return token.SignedString(t.secret)
 }
 
-func (t *TokenManager) ValidateToken(tokenString string) (*jwt.Token, error) {
+func (t *TokenManager) ValidateToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -56,12 +63,23 @@ func (t *TokenManager) ValidateToken(tokenString string) (*jwt.Token, error) {
 		return t.secret, nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse token: %w", err)
+		return false, fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	if !token.Valid {
-		return nil, ErrInvalidToken
+		return false, ErrInvalidToken
 	}
 
-	return token, nil
+	return true, nil
+}
+
+func tokenTypeFromString(tokenString string) (TokenType, error) {
+	switch tokenString {
+	case "access":
+		return Access, nil
+	case "refresh":
+		return Refresh, nil
+	default:
+		return 0, ErrInvalidTokenType
+	}
 }

@@ -86,7 +86,9 @@ func (x *NewAccountRequest) GetPassword() string {
 type NewAccountResponse struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	AccountAddress   string                 `protobuf:"bytes,1,opt,name=AccountAddress,proto3" json:"AccountAddress,omitempty"`
-	RegistrationDate *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=RegistrationDate,proto3" json:"RegistrationDate,omitempty"`
+	RefreshToken     string                 `protobuf:"bytes,2,opt,name=RefreshToken,proto3" json:"RefreshToken,omitempty"`
+	AccessToken      string                 `protobuf:"bytes,3,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	RegistrationDate *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=RegistrationDate,proto3" json:"RegistrationDate,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -128,11 +130,129 @@ func (x *NewAccountResponse) GetAccountAddress() string {
 	return ""
 }
 
+func (x *NewAccountResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *NewAccountResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
 func (x *NewAccountResponse) GetRegistrationDate() *timestamppb.Timestamp {
 	if x != nil {
 		return x.RegistrationDate
 	}
 	return nil
+}
+
+type LoginAccountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=Email,proto3" json:"Email,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=Password,proto3" json:"Password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoginAccountRequest) Reset() {
+	*x = LoginAccountRequest{}
+	mi := &file_accountmanager_account_manager_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginAccountRequest) ProtoMessage() {}
+
+func (x *LoginAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_accountmanager_account_manager_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginAccountRequest.ProtoReflect.Descriptor instead.
+func (*LoginAccountRequest) Descriptor() ([]byte, []int) {
+	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LoginAccountRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *LoginAccountRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type LoginAccountResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=RefreshToken,proto3" json:"RefreshToken,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LoginAccountResponse) Reset() {
+	*x = LoginAccountResponse{}
+	mi := &file_accountmanager_account_manager_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LoginAccountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoginAccountResponse) ProtoMessage() {}
+
+func (x *LoginAccountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_accountmanager_account_manager_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoginAccountResponse.ProtoReflect.Descriptor instead.
+func (*LoginAccountResponse) Descriptor() ([]byte, []int) {
+	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *LoginAccountResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *LoginAccountResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
 }
 
 type GetAccountResponse struct {
@@ -145,7 +265,7 @@ type GetAccountResponse struct {
 
 func (x *GetAccountResponse) Reset() {
 	*x = GetAccountResponse{}
-	mi := &file_accountmanager_account_manager_proto_msgTypes[2]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -157,7 +277,7 @@ func (x *GetAccountResponse) String() string {
 func (*GetAccountResponse) ProtoMessage() {}
 
 func (x *GetAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_accountmanager_account_manager_proto_msgTypes[2]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -170,7 +290,7 @@ func (x *GetAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountResponse.ProtoReflect.Descriptor instead.
 func (*GetAccountResponse) Descriptor() ([]byte, []int) {
-	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{2}
+	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetAccountResponse) GetUsername() string {
@@ -196,7 +316,7 @@ type GetAccountRequest struct {
 
 func (x *GetAccountRequest) Reset() {
 	*x = GetAccountRequest{}
-	mi := &file_accountmanager_account_manager_proto_msgTypes[3]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -208,7 +328,7 @@ func (x *GetAccountRequest) String() string {
 func (*GetAccountRequest) ProtoMessage() {}
 
 func (x *GetAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_accountmanager_account_manager_proto_msgTypes[3]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -221,7 +341,7 @@ func (x *GetAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountRequest.ProtoReflect.Descriptor instead.
 func (*GetAccountRequest) Descriptor() ([]byte, []int) {
-	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{3}
+	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetAccountRequest) GetID() string {
@@ -241,7 +361,7 @@ type ChangePasswordRequest struct {
 
 func (x *ChangePasswordRequest) Reset() {
 	*x = ChangePasswordRequest{}
-	mi := &file_accountmanager_account_manager_proto_msgTypes[4]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -253,7 +373,7 @@ func (x *ChangePasswordRequest) String() string {
 func (*ChangePasswordRequest) ProtoMessage() {}
 
 func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_accountmanager_account_manager_proto_msgTypes[4]
+	mi := &file_accountmanager_account_manager_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -266,7 +386,7 @@ func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{4}
+	return file_accountmanager_account_manager_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ChangePasswordRequest) GetOldPassword() string {
@@ -291,10 +411,18 @@ const file_accountmanager_account_manager_proto_rawDesc = "" +
 	"\x11NewAccountRequest\x12\x1a\n" +
 	"\bUsername\x18\x01 \x01(\tR\bUsername\x12\x14\n" +
 	"\x05Email\x18\x02 \x01(\tR\x05Email\x12\x1a\n" +
-	"\bPassword\x18\x03 \x01(\tR\bPassword\"\x84\x01\n" +
+	"\bPassword\x18\x03 \x01(\tR\bPassword\"\xca\x01\n" +
 	"\x12NewAccountResponse\x12&\n" +
-	"\x0eAccountAddress\x18\x01 \x01(\tR\x0eAccountAddress\x12F\n" +
-	"\x10RegistrationDate\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x10RegistrationDate\"F\n" +
+	"\x0eAccountAddress\x18\x01 \x01(\tR\x0eAccountAddress\x12\"\n" +
+	"\fRefreshToken\x18\x02 \x01(\tR\fRefreshToken\x12 \n" +
+	"\vAccessToken\x18\x03 \x01(\tR\vAccessToken\x12F\n" +
+	"\x10RegistrationDate\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x10RegistrationDate\"G\n" +
+	"\x13LoginAccountRequest\x12\x14\n" +
+	"\x05Email\x18\x01 \x01(\tR\x05Email\x12\x1a\n" +
+	"\bPassword\x18\x02 \x01(\tR\bPassword\"\\\n" +
+	"\x14LoginAccountResponse\x12 \n" +
+	"\vAccessToken\x18\x01 \x01(\tR\vAccessToken\x12\"\n" +
+	"\fRefreshToken\x18\x02 \x01(\tR\fRefreshToken\"F\n" +
 	"\x12GetAccountResponse\x12\x1a\n" +
 	"\bUsername\x18\x01 \x01(\tR\bUsername\x12\x14\n" +
 	"\x05Email\x18\x02 \x01(\tR\x05Email\"#\n" +
@@ -302,10 +430,11 @@ const file_accountmanager_account_manager_proto_rawDesc = "" +
 	"\x02ID\x18\x01 \x01(\tR\x02ID\"[\n" +
 	"\x15ChangePasswordRequest\x12 \n" +
 	"\vOldPassword\x18\x01 \x01(\tR\vOldPassword\x12 \n" +
-	"\vNewPassword\x18\x02 \x01(\tR\vNewPassword2\x8b\x02\n" +
+	"\vNewPassword\x18\x02 \x01(\tR\vNewPassword2\xe6\x02\n" +
 	"\x0eAccountManager\x12S\n" +
 	"\n" +
-	"NewAccount\x12!.accountmanager.NewAccountRequest\x1a\".accountmanager.NewAccountResponse\x12S\n" +
+	"NewAccount\x12!.accountmanager.NewAccountRequest\x1a\".accountmanager.NewAccountResponse\x12Y\n" +
+	"\fLoginAccount\x12#.accountmanager.LoginAccountRequest\x1a$.accountmanager.LoginAccountResponse\x12S\n" +
 	"\n" +
 	"GetAccount\x12!.accountmanager.GetAccountRequest\x1a\".accountmanager.GetAccountResponse\x12O\n" +
 	"\x0eChangePassword\x12%.accountmanager.ChangePasswordRequest\x1a\x16.google.protobuf.EmptyB\x14Z\x12pkg/accountmanagerb\x06proto3"
@@ -322,26 +451,30 @@ func file_accountmanager_account_manager_proto_rawDescGZIP() []byte {
 	return file_accountmanager_account_manager_proto_rawDescData
 }
 
-var file_accountmanager_account_manager_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_accountmanager_account_manager_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_accountmanager_account_manager_proto_goTypes = []any{
 	(*NewAccountRequest)(nil),     // 0: accountmanager.NewAccountRequest
 	(*NewAccountResponse)(nil),    // 1: accountmanager.NewAccountResponse
-	(*GetAccountResponse)(nil),    // 2: accountmanager.GetAccountResponse
-	(*GetAccountRequest)(nil),     // 3: accountmanager.GetAccountRequest
-	(*ChangePasswordRequest)(nil), // 4: accountmanager.ChangePasswordRequest
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 6: google.protobuf.Empty
+	(*LoginAccountRequest)(nil),   // 2: accountmanager.LoginAccountRequest
+	(*LoginAccountResponse)(nil),  // 3: accountmanager.LoginAccountResponse
+	(*GetAccountResponse)(nil),    // 4: accountmanager.GetAccountResponse
+	(*GetAccountRequest)(nil),     // 5: accountmanager.GetAccountRequest
+	(*ChangePasswordRequest)(nil), // 6: accountmanager.ChangePasswordRequest
+	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
 }
 var file_accountmanager_account_manager_proto_depIdxs = []int32{
-	5, // 0: accountmanager.NewAccountResponse.RegistrationDate:type_name -> google.protobuf.Timestamp
+	7, // 0: accountmanager.NewAccountResponse.RegistrationDate:type_name -> google.protobuf.Timestamp
 	0, // 1: accountmanager.AccountManager.NewAccount:input_type -> accountmanager.NewAccountRequest
-	3, // 2: accountmanager.AccountManager.GetAccount:input_type -> accountmanager.GetAccountRequest
-	4, // 3: accountmanager.AccountManager.ChangePassword:input_type -> accountmanager.ChangePasswordRequest
-	1, // 4: accountmanager.AccountManager.NewAccount:output_type -> accountmanager.NewAccountResponse
-	2, // 5: accountmanager.AccountManager.GetAccount:output_type -> accountmanager.GetAccountResponse
-	6, // 6: accountmanager.AccountManager.ChangePassword:output_type -> google.protobuf.Empty
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	2, // 2: accountmanager.AccountManager.LoginAccount:input_type -> accountmanager.LoginAccountRequest
+	5, // 3: accountmanager.AccountManager.GetAccount:input_type -> accountmanager.GetAccountRequest
+	6, // 4: accountmanager.AccountManager.ChangePassword:input_type -> accountmanager.ChangePasswordRequest
+	1, // 5: accountmanager.AccountManager.NewAccount:output_type -> accountmanager.NewAccountResponse
+	3, // 6: accountmanager.AccountManager.LoginAccount:output_type -> accountmanager.LoginAccountResponse
+	4, // 7: accountmanager.AccountManager.GetAccount:output_type -> accountmanager.GetAccountResponse
+	8, // 8: accountmanager.AccountManager.ChangePassword:output_type -> google.protobuf.Empty
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -358,7 +491,7 @@ func file_accountmanager_account_manager_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_accountmanager_account_manager_proto_rawDesc), len(file_accountmanager_account_manager_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

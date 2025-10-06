@@ -22,7 +22,9 @@ message NewAccountRequest {
 
 message NewAccountResponse {
   string AccountAddress = 1;
-  google.protobuf.Timestamp RegistrationDate = 2;
+  string RefreshToken = 2;
+  string AccessToken = 3;
+  google.protobuf.Timestamp RegistrationDate = 4;
 }
 
 message LoginAccountRequest {
@@ -38,6 +40,7 @@ message LoginAccountResponse {
 message GetAccountResponse {
   string Username = 1;
   string Email = 2;
+  google.protobuf.Timestamp RegistrationDate = 3;
 }
 
 message GetAccountRequest {
