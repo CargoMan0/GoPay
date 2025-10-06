@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/jwt"
 	"github/com/CargoMan0/GoPay/accountmanager/internal/repository"
 )
 
@@ -21,8 +22,13 @@ type PasswordHasher interface {
 	CompareHashAndPassword(hash, password string) (bool, error)
 }
 
+const (
+	TokenTypeAccess  = "ACCESS"
+	TokenTypeRefresh = "REFRESH"
+)
+
 type TokenManager interface {
-	GenerateToken(tokenType jwt.TokenType, userID uuid.UUID) (string, error)
+	GenerateToken(tokenType string, userID uuid.UUID) (string, error)
 	ValidateToken(token string) (bool, error)
 }
 
@@ -44,35 +50,50 @@ func NewAccountService(
 	}
 }
 
-func (s *AccountService) NewAccount(ctx context.Context, data *entity.NewAccountData) (uuid.UUID, error) {
+func (s *AccountService) NewAccount(ctx context.Context, data *entity.NewAccountData) (*entity.NewAccountResult, error) {
 	userID := uuid.New()
 
-	accessToken, err := s.tokenManager.GenerateToken(jwt.Access, userID)
+	refreshToken, err := s.tokenManager.GenerateToken(TokenTypeRefresh, userID)
 	if err != nil {
-		return uuid.Nil, err
+		return nil, fmt.Errorf("generate refresh token: %w", err)
 	}
 
 	account := &entity.Account{
-		ID:       userID,
-		Username: data.Username,
-		Email:    data.Email,
+		ID:               userID,
+		Username:         data.Username,
+		Email:            data.Email,
+		RefreshTokenHash: hashToken(refreshToken),
 	}
 
 	hashed, err := s.hasher.HashPassword(data.Password)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("failed to hash password: %w", err)
+		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 	account.PasswordHash = hashed
 
 	err = s.repo.SaveAccount(ctx, account)
 	if err != nil {
-		return uuid.Nil, err
+		return nil, err
 	}
 
 	// TODO: Save account`s balance also
 	// TODO: Transactional Outbox pattern
 
-	return account.ID, nil
+	accessToken, err := s.tokenManager.GenerateToken(TokenTypeAccess, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate access token: %w", err)
+	}
+
+	return &entity.NewAccountResult{
+		ID:           account.ID,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+func hashToken(token string) string {
+	hash := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(hash[:])
 }
 
 func (s *AccountService) GetAccount(ctx context.Context, id uuid.UUID) (*entity.Account, error) {

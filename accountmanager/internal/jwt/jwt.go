@@ -27,8 +27,14 @@ func NewTokenManager(cfg config.TokenManager) *TokenManager {
 	}
 }
 
-func (t *TokenManager) GenerateToken(tokenType TokenType, userID uuid.UUID) (string, error) {
+func (t *TokenManager) GenerateToken(tokenTypeStr string, userID uuid.UUID) (string, error) {
+	tokenType, err := tokenTypeFromString(tokenTypeStr)
+	if err != nil {
+		return "", err
+	}
+
 	var expiration time.Duration
+
 	switch tokenType {
 	case Access:
 		expiration = time.Minute * 15
@@ -65,4 +71,15 @@ func (t *TokenManager) ValidateToken(tokenString string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func tokenTypeFromString(tokenString string) (TokenType, error) {
+	switch tokenString {
+	case "access":
+		return Access, nil
+	case "refresh":
+		return Refresh, nil
+	default:
+		return 0, ErrInvalidTokenType
+	}
 }
