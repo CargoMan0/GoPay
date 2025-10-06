@@ -21,9 +21,10 @@ type NewAccountData struct {
 }
 
 type NewAccountResult struct {
-	ID           uuid.UUID
-	AccessToken  string
-	RefreshToken string
+	ID               uuid.UUID
+	RegistrationDate time.Time
+	AccessToken      string
+	RefreshToken     string
 }
 
 type ChangePasswordData struct {

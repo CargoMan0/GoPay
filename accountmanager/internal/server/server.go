@@ -12,8 +12,11 @@ import (
 )
 
 type AccountService interface {
-	NewAccount(ctx context.Context, data *entity.NewAccountData) (uuid.UUID, error)
+	NewAccount(ctx context.Context, data *entity.NewAccountData) (*entity.NewAccountResult, error)
 	GetAccount(ctx context.Context, id uuid.UUID) (*entity.Account, error)
+
+	ChangePassword(ctx context.Context, data *entity.ChangePasswordData) error
+	LoginAccount(ctx context.Context) (*accountmanager.LoginAccountResponse, error)
 }
 
 type Server struct {

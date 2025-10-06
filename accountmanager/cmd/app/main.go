@@ -56,8 +56,6 @@ func run() (err error) {
 		slog.Info("Database connection closed")
 	}()
 
-	slog.Info("Creating ...")
-
 	// Repository
 	repo := repository.New(db)
 

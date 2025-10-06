@@ -64,3 +64,7 @@ func (s *Server) ChangePassword(ctx context.Context, req *accountmanager.ChangeP
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s *Server) LoginAccount(ctx context.Context, req *accountmanager.LoginAccountRequest) (*accountmanager.LoginAccountResponse, error) {
+
+}
