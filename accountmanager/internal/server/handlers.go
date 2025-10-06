@@ -3,15 +3,33 @@ package server
 import (
 	"context"
 	"github.com/google/uuid"
+	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
 	"github/com/CargoMan0/GoPay/pkg/accountmanager"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// TODO: Finish
-
 func (s *Server) NewAccount(ctx context.Context, req *accountmanager.NewAccountRequest) (*accountmanager.NewAccountResponse, error) {
+	data := &entity.NewAccountData{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+	}
 
+	res, err := s.accountService.NewAccount(ctx, data)
+	if err != nil {
+		return nil, handleError(err)
+	}
+
+	var resp = &accountmanager.NewAccountResponse{
+		AccountAddress:   res.AccessToken,
+		RefreshToken:     res.RefreshToken,
+		RegistrationDate: timestamppb.New(res.RegistrationDate),
+	}
+
+	return resp, nil
 }
 
 func (s *Server) GetAccount(ctx context.Context, req *accountmanager.GetAccountRequest) (*accountmanager.GetAccountResponse, error) {
@@ -25,9 +43,24 @@ func (s *Server) GetAccount(ctx context.Context, req *accountmanager.GetAccountR
 		return nil, handleError(err)
 	}
 
-	_ = account
+	var resp = &accountmanager.GetAccountResponse{
+		Username: account.Username,
+		Email:    account.Email,
+	}
+
+	return resp, nil
 }
 
-func (s *Server) ChangePassword() {
-	// s.accountService.
+func (s *Server) ChangePassword(ctx context.Context, req *accountmanager.ChangePasswordRequest) (*emptypb.Empty, error) {
+	var data = &entity.ChangePasswordData{
+		OldPassword: req.OldPassword,
+		NewPassword: req.NewPassword,
+	}
+
+	err := s.accountService.ChangePassword(ctx, data)
+	if err != nil {
+		return nil, handleError(err)
+	}
+
+	return &emptypb.Empty{}, nil
 }
