@@ -58,10 +58,7 @@ func run() (err error) {
 		slog.Info("Database connection closed")
 	}()
 
-	producer, err := newKafkaProducer()
-	if err != nil {
-		return fmt.Errorf("new kafka producer: %v", err)
-	}
+	producer := newKafkaProducer(cfg.Producer)
 	go func() {
 		<-ctx.Done()
 		closeErr := producer.Close()
