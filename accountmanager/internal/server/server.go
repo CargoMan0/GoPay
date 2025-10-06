@@ -16,7 +16,7 @@ type AccountService interface {
 	GetAccount(ctx context.Context, id uuid.UUID) (*entity.Account, error)
 
 	ChangePassword(ctx context.Context, data *entity.ChangePasswordData) error
-	LoginAccount(ctx context.Context) (*accountmanager.LoginAccountResponse, error)
+	LoginAccount(ctx context.Context, email, password string) (*entity.LoginAccountResult, error)
 }
 
 type Server struct {

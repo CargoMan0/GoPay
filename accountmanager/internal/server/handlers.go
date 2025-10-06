@@ -23,7 +23,7 @@ func (s *Server) NewAccount(ctx context.Context, req *accountmanager.NewAccountR
 		return nil, handleError(err)
 	}
 
-	var resp = &accountmanager.NewAccountResponse{
+	resp := &accountmanager.NewAccountResponse{
 		AccountAddress:   res.AccessToken,
 		RefreshToken:     res.RefreshToken,
 		RegistrationDate: timestamppb.New(res.RegistrationDate),
@@ -43,7 +43,7 @@ func (s *Server) GetAccount(ctx context.Context, req *accountmanager.GetAccountR
 		return nil, handleError(err)
 	}
 
-	var resp = &accountmanager.GetAccountResponse{
+	resp := &accountmanager.GetAccountResponse{
 		Username: account.Username,
 		Email:    account.Email,
 	}
@@ -66,5 +66,19 @@ func (s *Server) ChangePassword(ctx context.Context, req *accountmanager.ChangeP
 }
 
 func (s *Server) LoginAccount(ctx context.Context, req *accountmanager.LoginAccountRequest) (*accountmanager.LoginAccountResponse, error) {
+	// TODO: validate
+	email := req.Email
+	password := req.Password
 
+	res, err := s.accountService.LoginAccount(ctx, email, password)
+	if err != nil {
+		return nil, handleError(err)
+	}
+
+	resp := &accountmanager.LoginAccountResponse{
+		AccessToken:  res.AccessToken,
+		RefreshToken: res.RefreshToken,
+	}
+
+	return resp, nil
 }

@@ -32,3 +32,8 @@ type ChangePasswordData struct {
 	OldPassword string
 	NewPassword string
 }
+
+type LoginAccountResult struct {
+	AccessToken  string
+	RefreshToken string
+}
