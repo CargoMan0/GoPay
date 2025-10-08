@@ -10,8 +10,6 @@ type Account struct {
 	RegistrationDate time.Time
 	Username         string
 	Email            string
-	PasswordHash     string
-	RefreshTokenHash string
 }
 
 type NewAccountData struct {
