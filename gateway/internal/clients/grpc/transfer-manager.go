@@ -12,10 +12,10 @@ func NewTransferFeedAdapter() *TransferFeedClient {
 	return &TransferFeedClient{}
 }
 
-func (t *TransferFeedClient) NewTransfer(ctx context.Context, data *models.NewTransferData) (uuid.UUID, error) {
-
+func (t *TransferFeedClient) NewTransfer(ctx context.Context) (uuid.UUID, error) {
+	return uuid.Nil, nil
 }
 
 func (t *TransferFeedClient) CancelTransfer(ctx context.Context, id uuid.UUID) error {
-
+	return nil
 }
