@@ -1,13 +1,13 @@
 package models
 
-import (
-	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
-)
+type NewAccountData struct {
+	Username string
+	Email    string
+	Password string
+}
 
-type NewTransferData struct {
-	ID          uuid.UUID
-	Amount      decimal.Decimal
-	FromAddress string
-	ToAddress   string
+type NewAccountResult struct {
+	WalletAddress string
+	AccessToken   string
+	RefreshToken  string
 }

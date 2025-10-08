@@ -1,7 +1,13 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"errors"
+	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+)
 
-func handleError(ctx *gin.Context, err error) {
-
+func handleError(ctx *fiber.App, err error) {
+	switch {
+	case errors.Is(err, fiber.ErrInternalServerError):
+	}
 }

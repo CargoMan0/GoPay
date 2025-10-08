@@ -1,43 +1,45 @@
 package controller
 
 import (
-	"github.com/CargoMan0/GoPay/gateway/internal/controller/http"
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github/com/CargoMan0/GoPay/gateway/internal/controller/http"
 )
-
-type Controller interface {
-	SetupRoutes(e *gin.Engine)
-}
 
 type controller struct {
 	transferManagerCtrl *http.TransferManagerController
 	operationFeedCtrl   *http.OperationFeedController
-	accountManagerCtrl *http.
+	accountManagerCtrl  *http.AccountManagerController
+	authServiceCtrl     *http.AuthServiceController
 }
 
 func New(
 	tmc *http.TransferManagerController,
 	ofc *http.OperationFeedController,
-) Controller {
+) *controller {
 	return &controller{
 		transferManagerCtrl: tmc,
 		operationFeedCtrl:   ofc,
 	}
 }
 
-func (c *controller) SetupRoutes(eng *gin.Engine) {
-	eng.Use(gin.Recovery())
+func (c *controller) SetupRoutes(app *fiber.App) {
+	apiV1 := app.Group("/api/v1")
 
-	apiV1 := eng.Group("/v1")
+	auth := apiV1.Group("/auth")
+	auth.Post("/register", c.authServiceCtrl.Register)
+	auth.Post("/login", c.authServiceCtrl.Login)
 
-	transferGroup := apiV1.Group("/transfer")
-	transferGroup.GET("/:id", c.operationFeedCtrl.GetTransfer)
-	transferGroup.GET("/", c.operationFeedCtrl.GetTransfers)
-	transferGroup.POST("/", c.transferManagerCtrl.NewTransfer)
-	transferGroup.DELETE("/:id", c.transferManagerCtrl.CancelTransfer)
+	protected := apiV1.Group("", authMiddleware(c.authServiceCtrl))
 
-	accountGroup := apiV1.Group("/account")
-	accountGroup.GET("/:id")
-	accountGroup.POST("/")
+	accounts := protected.Group("/accounts")
+	accounts.Get("/:id", c.accountManagerCtrl.GetAccount)
+	accounts.Patch("/:id", c.accountManagerCtrl.UpdateAccount)
 
+	transfers := protected.Group("/transfers")
+	transfers.Post("/", c.transferManagerCtrl.CreateTransfer)
+	transfers.Delete("/:id", c.transferManagerCtrl.CancelTransfer)
+
+	operations := protected.Group("/operations")
+	operations.Get("/transfers/:id", c.operationFeedCtrl.GetTransfer)
+	operations.Get("/transfers", c.operationFeedCtrl.GetTransfers)
 }
