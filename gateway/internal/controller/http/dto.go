@@ -1,19 +1,23 @@
 package http
 
-type newAccountRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-}
-
-type newAccountResponse struct {
-	WalletAddress string `json:"wallet_address"`
-	AccessToken   string `json:"access_token"`
-	RefreshToken  string `json:"refresh_token"`
-}
-
 type registerRequest struct {
+	Email    string `json:"email"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Email    string `json:"email"`
+}
+
+type registerResponse struct {
+	Email     string `json:"email"`
+	Username  string `json:"username"`
+	UserID    string `json:"session_id"`
+	CreatedAt string `json:"created_at"`
+}
+
+type loginResponse struct {
+	SessionID string `json:"session_id"`
+	ExpiresAt string `json:"expires_at"`
+}
+
+type logoutRequest struct {
+	SessionID string `json:"session_id"`
 }

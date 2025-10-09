@@ -1,17 +1,19 @@
 package http
 
 import (
-	"github.com/CargoMan0/GoPay/gateway/internal/adapter/grpc"
 	"github.com/gofiber/fiber/v2"
 )
 
+type TransferManagerAdapter interface{}
+
 type TransferManagerController struct {
-	// ...
+	adapter TransferManagerAdapter
 }
 
-func NewTransferManagerController() *TransferManagerController {
-	return &TransferManagerController{}
-
+func NewTransferManagerController(adapter TransferManagerAdapter) *TransferManagerController {
+	return &TransferManagerController{
+		adapter: adapter,
+	}
 }
 
 func (t *TransferManagerController) CreateTransfer(ctx *fiber.Ctx) error {

@@ -2,8 +2,8 @@ package grpc_clients
 
 import (
 	"fmt"
-	"github/com/CargoMan0/GoPay/pkg/accountmanager"
-	"github/com/CargoMan0/GoPay/pkg/gen/auth"
+	"github.com/CargoMan0/GoPay/pkg/accountmanager"
+	"github.com/CargoMan0/GoPay/pkg/gen/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

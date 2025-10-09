@@ -21,7 +21,6 @@ func (v *Validator) WithMinPasswordLength(length int) *Validator {
 }
 
 func (v *Validator) ValidateEmail(email string) error {
-
 	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	matched, err := regexp.MatchString(pattern, email)
 	if err != nil || !matched {

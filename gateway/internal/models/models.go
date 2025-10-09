@@ -1,5 +1,10 @@
 package models
 
+import (
+	"github.com/google/uuid"
+	"time"
+)
+
 type NewAccountData struct {
 	Username string
 	Email    string
@@ -18,4 +23,23 @@ type RegisterData struct {
 	Username  string
 	IP        string
 	UserAgent string
+}
+
+type RegisterResult struct {
+	UserID    uuid.UUID
+	Username  string
+	Email     string
+	CreatedAt time.Time
+}
+
+type LoginResult struct {
+	SessionID string
+	ExpiresAt time.Time
+}
+
+type ValidateSessionResult struct {
+	Username   string
+	Email      string
+	ExpiresAt  time.Time
+	LastUsedAt time.Time
 }

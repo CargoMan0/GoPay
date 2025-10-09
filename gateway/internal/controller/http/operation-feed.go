@@ -4,11 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type OperationFeedAdapter interface{}
+
 type OperationFeedController struct {
+	adapter OperationFeedAdapter
 }
 
-func NewOperationFeedController() *OperationFeedController {
-	return &OperationFeedController{}
+func NewOperationFeedController(adapter OperationFeedAdapter) *OperationFeedController {
+	return &OperationFeedController{
+		adapter: adapter,
+	}
 }
 
 func (c *OperationFeedController) GetTransfer(ctx *fiber.Ctx) error {

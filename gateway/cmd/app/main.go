@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/CargoMan0/GoPay/gateway/internal/clients/grpc"
+	"github.com/CargoMan0/GoPay/gateway/internal/adapters/grpc"
 	"github.com/CargoMan0/GoPay/gateway/internal/config"
 	"github.com/CargoMan0/GoPay/gateway/internal/controller"
 	"github.com/CargoMan0/GoPay/gateway/internal/controller/http"
@@ -76,16 +76,17 @@ func run() (err error) {
 	// Utils
 	vldt := validator.New()
 
-	accountManagerCL := grpc.NewAccountManagerClient(accountManagerGRPCClient)
-	transferManagerCl := grpc.NewTransferManagerClient()
-	operationFeedCl := grpc.NewOperationFeedClient()
-	authCl := grpc.NewAuthServiceClient(authGRPCClient)
+	// gRPC adapters
+	accountManagerAdapter := grpc.NewAccountManagerAdapter(accountManagerGRPCClient)
+	transferManagerAdapter := grpc.NewTransferManagerAdapter()
+	operationFeedAdapter := grpc.NewOperationFeedAdapter()
+	authServiceAdapter := grpc.NewAuthServiceAdapter(authGRPCClient)
 
-	// Controllers for different microservices
-	accountManagerController := http.NewAccountManagerController(accountManagerCL)
-	authServiceController := http.NewAuthServiceController(authCl, vldt)
-	operationFeedController := http.NewOperationFeedController()
-	transferManagerController := http.NewTransferManagerController()
+	// HTTP controllers
+	accountManagerController := http.NewAccountManagerController(accountManagerAdapter)
+	authServiceController := http.NewAuthServiceController(authServiceAdapter, vldt)
+	operationFeedController := http.NewOperationFeedController(operationFeedAdapter)
+	transferManagerController := http.NewTransferManagerController(transferManagerAdapter)
 
 	// General controller
 	ctrl := controller.New(
