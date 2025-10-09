@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "pkg/gen/auth";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+  rpc ValidateSession(ValidateSessionRequest) returns (ValidateSessionResponse);
+  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty);
+  rpc RevokeAllUserSessions(RevokeAllUserSessionsRequest) returns (google.protobuf.Empty);
+  rpc ListUserSessions(ListUserSessionsRequest) returns (ListUserSessionsResponse);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string username = 3;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string email = 2;
+  string username = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  string ip_address = 3;
+  string user_agent = 4;
+}
+
+message LoginResponse {
+  string user_id = 1;
+  string email = 2;
+  string username = 3;
+  string session_id = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
+message LogoutRequest {
+  string session_id = 1;
+}
+
+message ValidateSessionRequest {
+  string session_id = 1;
+}
+
+message ValidateSessionResponse {
+  string user_id = 1;
+  string email = 2;
+  string username = 3;
+  google.protobuf.Timestamp expires_at = 4;
+  google.protobuf.Timestamp last_activity = 5;
+}
+
+message RevokeSessionRequest {
+  string session_id = 1;
+}
+
+message RevokeAllUserSessionsRequest {
+  string user_id = 1;
+}
+
+message ListUserSessionsRequest {
+  string user_id = 1;
+}
+
+message ListUserSessionsResponse {
+  repeated Session sessions = 1;
+}
+
+message Session {
+  string session_id = 1;
+  string user_id = 2;
+  string ip_address = 3;
+  string user_agent = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp last_activity = 6;
+  google.protobuf.Timestamp expires_at = 7;
+}
