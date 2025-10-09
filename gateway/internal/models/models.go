@@ -11,3 +11,11 @@ type NewAccountResult struct {
 	AccessToken   string
 	RefreshToken  string
 }
+
+type RegisterData struct {
+	Email     string
+	Password  string
+	Username  string
+	IP        string
+	UserAgent string
+}

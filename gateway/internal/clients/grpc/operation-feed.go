@@ -5,7 +5,7 @@ import "github.com/gofiber/fiber/v2"
 type OperationFeedClient struct {
 }
 
-func NewOperationFeedAdapter() *OperationFeedClient {
+func NewOperationFeedClient() *OperationFeedClient {
 	return &OperationFeedClient{}
 }
 

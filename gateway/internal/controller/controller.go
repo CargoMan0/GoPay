@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"github.com/CargoMan0/GoPay/gateway/internal/controller/http"
 	"github.com/gofiber/fiber/v2"
-	"github/com/CargoMan0/GoPay/gateway/internal/controller/http"
 )
 
 type controller struct {
@@ -15,10 +15,14 @@ type controller struct {
 func New(
 	tmc *http.TransferManagerController,
 	ofc *http.OperationFeedController,
+	auc *http.AuthServiceController,
+	amc *http.AccountManagerController,
 ) *controller {
 	return &controller{
 		transferManagerCtrl: tmc,
 		operationFeedCtrl:   ofc,
+		accountManagerCtrl:  amc,
+		authServiceCtrl:     auc,
 	}
 }
 

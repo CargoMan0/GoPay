@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func handleError(ctx *fiber.App, err error) {
+func handleError(c *fiber.Ctx, err error) {
 	switch {
 	case errors.Is(err, fiber.ErrInternalServerError):
 	}

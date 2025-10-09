@@ -5,17 +5,17 @@ import (
 	"github.com/google/uuid"
 )
 
-type TransferFeedClient struct {
+type TransferManagerClient struct {
 }
 
-func NewTransferFeedAdapter() *TransferFeedClient {
-	return &TransferFeedClient{}
+func NewTransferManagerClient() *TransferManagerClient {
+	return &TransferManagerClient{}
 }
 
-func (t *TransferFeedClient) NewTransfer(ctx context.Context) (uuid.UUID, error) {
+func (t *TransferManagerClient) NewTransfer(ctx context.Context) (uuid.UUID, error) {
 	return uuid.Nil, nil
 }
 
-func (t *TransferFeedClient) CancelTransfer(ctx context.Context, id uuid.UUID) error {
+func (t *TransferManagerClient) CancelTransfer(ctx context.Context, id uuid.UUID) error {
 	return nil
 }
