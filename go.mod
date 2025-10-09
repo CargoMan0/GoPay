@@ -1,4 +1,4 @@
-module github/com/CargoMan0/GoPay
+module github.com/CargoMan0/GoPay
 
 go 1.24.6
 
