@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/repository"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/entity"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/repository"
 )
 
 type Repository interface {

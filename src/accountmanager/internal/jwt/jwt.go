@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/config"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

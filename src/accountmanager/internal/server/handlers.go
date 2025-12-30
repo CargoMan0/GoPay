@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 	"github.com/google/uuid"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
 	"github/com/CargoMan0/GoPay/pkg/accountmanager"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/entity"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"

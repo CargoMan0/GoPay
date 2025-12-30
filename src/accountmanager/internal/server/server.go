@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/config"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
 	"github/com/CargoMan0/GoPay/pkg/accountmanager"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/config"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/entity"
 	"google.golang.org/grpc"
 	"net"
 )

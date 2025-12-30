@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/entity"
+	entity2 "github/com/CargoMan0/GoPay/src/accountmanager/internal/entity"
 )
 
 type repository struct {
@@ -17,7 +17,7 @@ func New(db *sql.DB) *repository {
 	return &repository{db: db}
 }
 
-func (r *repository) SaveAccountAndEventInTx(ctx context.Context, account *entity.Account) (err error) {
+func (r *repository) SaveAccountAndEventInTx(ctx context.Context, account *entity2.Account) (err error) {
 	const (
 		saveAccountQuery      = `INSERT INTO account.accounts(id,registration_date,username,password_hash,email,refresh_token_hash) VALUES ($1, $2, $3, $4, $5, $6)`
 		saveAccountEventQuery = `INSERT INTO account.account_created_events(event_type,payload) VALUES ($1, $2)`
@@ -52,10 +52,10 @@ func (r *repository) SaveAccountAndEventInTx(ctx context.Context, account *entit
 	return nil
 }
 
-func (r *repository) GetAccountByID(ctx context.Context, id uuid.UUID) (*entity.Account, error) {
+func (r *repository) GetAccountByID(ctx context.Context, id uuid.UUID) (*entity2.Account, error) {
 	const query = `SELECT registration_date,username,password_hash,email,refresh_token_hash FROM account.accounts WHERE id = $1`
 
-	var res = entity.Account{
+	var res = entity2.Account{
 		ID: id,
 	}
 
@@ -70,10 +70,10 @@ func (r *repository) GetAccountByID(ctx context.Context, id uuid.UUID) (*entity.
 	return &res, nil
 }
 
-func (r *repository) GetAccountByEmail(ctx context.Context, email string) (*entity.Account, error) {
+func (r *repository) GetAccountByEmail(ctx context.Context, email string) (*entity2.Account, error) {
 	const query = `SELECT id,registration_date,username,password_hash,refresh_token_hash FROM account.accounts WHERE email = $1`
 
-	var res = entity.Account{
+	var res = entity2.Account{
 		Email: email,
 	}
 
@@ -88,7 +88,7 @@ func (r *repository) GetAccountByEmail(ctx context.Context, email string) (*enti
 	return &res, nil
 }
 
-func (r *repository) GetEvents(ctx context.Context, limit uint8) (_ []entity.Event, err error) {
+func (r *repository) GetEvents(ctx context.Context, limit uint8) (_ []entity2.Event, err error) {
 	const query = `SELECT * FROM account.account_created_events LIMIT $1`
 
 	rows, err := r.db.QueryContext(ctx, query, limit)
@@ -102,9 +102,9 @@ func (r *repository) GetEvents(ctx context.Context, limit uint8) (_ []entity.Eve
 		}
 	}()
 
-	var res []entity.Event
+	var res []entity2.Event
 	for rows.Next() {
-		var event entity.Event
+		var event entity2.Event
 		_ = event
 		// TODO: finish
 	}

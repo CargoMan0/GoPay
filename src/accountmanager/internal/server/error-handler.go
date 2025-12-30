@@ -2,7 +2,7 @@ package server
 
 import (
 	"errors"
-	"github/com/CargoMan0/GoPay/accountmanager/internal/service"
+	"github/com/CargoMan0/GoPay/src/accountmanager/internal/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
