@@ -15,9 +15,9 @@ type AccountBalance struct {
 }
 
 type AccountBalanceAudit struct {
-	ID        uint
-	BalanceID uuid.UUID
-	Operation OperationType
-	Status    Status
-	CreatedAt time.Time
+	ID              uint
+	BalanceID       uuid.UUID
+	OperationType   OperationType
+	OperationStatus OperationStatus
+	CreatedAt       time.Time
 }

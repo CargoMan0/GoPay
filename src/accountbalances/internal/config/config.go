@@ -36,6 +36,7 @@ type DatabaseConfig struct {
 	User     string `env:"USER"`
 	Password string `env:"PASSWORD"`
 	Name     string `env:"NAME"`
+	SSLMode  string `env:"SSL_MODE"`
 	Port     int    `env:"PORT"`
 }
 
@@ -43,3 +44,7 @@ type CacheConfig struct {
 	Host string `env:"HOST"`
 	Port int    `env:"PORT"`
 }
+
+type ProducerConfig struct{}
+
+type ReaderConfig struct{}
