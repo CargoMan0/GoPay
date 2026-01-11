@@ -6,9 +6,10 @@ TODO: Write
 
 ## Architecture
 
-### 1.1 General Project Architecture
+### 1.1 General Project Architecture (C1, C2)
 
-![gopay_arch.png](assets/gopay_general_arch.png)
+1. C1 ![gopay_arch_c1.png](assets/gopay_general_arch_c1.png)
+2. C2 ![gopay_arch_c2.png](assets/gopay_general_arch_c2.png)
 
 ### 1.2 User Flows
 
@@ -32,8 +33,9 @@ TODO: Write
         2. If account balance fails with an error, BalanceCreationFailed event will be sent to "
            account.balance.creation-failed" topic, else BalanceCreated event will be sent to "account.balance.created"
            topic.
-    5. Auth Service waits for both ProfileCreated and BalanceCreated events. 
-       1. If both events are received, registration confirms and status "REGISTERED" is set, else "FAILED" status is set.
+    5. Auth Service waits for both ProfileCreated and BalanceCreated events.
+        1. If both events are received, registration confirms and status "REGISTERED" is set, else "FAILED" status is
+           set.
 
 ## Services
 
